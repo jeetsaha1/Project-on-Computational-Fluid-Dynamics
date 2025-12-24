@@ -45,51 +45,57 @@ CFD_PROJECT/
 📊 Output Data
 Velocity fields
 ```
-##📊 Simulation Outputs & Data Organization
+## 📊 Simulation Output & Data Handling
+- Flow variables are stored in structured **`.dat` files**
+- Results are generated in a **time-step–based numerical framework**
+- Data organization is optimized for:
+  - Efficient post-processing
+  - Scientific visualization
+  - Comparative analysis across cases
 
-Flow variables are stored in structured .dat files
-Results are generated in a time-step–based numerical framework
-Data layout is optimized for post-processing, visualization, and analysis
-Output structure supports reproducibility and parametric comparison across cases
+---
 
-##🚀 Future Scope & Project Roadmap
+## 🚀 Future Scope (Next Phases)
+This project is designed as a **progressive CFD framework** and will be extended beyond **Force 2.0** with the following planned enhancements:
 
-This project is designed as a continuously evolving CFD framework.
-Future development beyond Force 2.0 will focus on:
-Integration of advanced numerical solvers
-Development of higher-order stability and accuracy schemes
-Implementation of turbulence models
-Multi-physics coupling (heat transfer, buoyancy-driven flows, etc.)
-Performance optimization for large-scale computational grids
-Advanced flow visualization and post-processing pipelines
-Validation and benchmarking against standard CFD test cases
+- Integration of **advanced numerical solvers**
+- Improved **stability and accuracy schemes**
+- Introduction of **turbulence models**
+- **Multi-physics coupling** (e.g., heat transfer, buoyancy effects)
+- Optimization for **large-scale computational grids**
+- Enhanced **visualization and post-processing pipelines**
+- Validation against **standard benchmark CFD problems**
 
-##🎯 Project Objectives
+---
 
-Numerically investigate and understand fluid flow behavior
-Analyze the influence of physical and numerical parameters on flow characteristics
-Design a scalable, modular, and extensible CFD framework
-Establish a strong foundation for advanced simulations and research-oriented work
+## 🎯 Project Objectives
+- To numerically understand and analyze **fluid flow behavior**
+- To study the impact of **physical and non-dimensional parameters** on flow
+- To develop a **scalable, modular, and extensible CFD framework**
+- To establish a strong foundation for **advanced simulations and research work**
 
+---
 
-##🛠 Tools & Technologies
+## 🛠 Tools & Technologies
+- Numerical methods for **Computational Fluid Dynamics**
+- **Structured grid**–based discretization
+- Data-driven **post-processing and visualization**
+- Version control and collaboration using **Git & GitHub**
 
-Numerical methods applied to Computational Fluid Dynamics
-Structured grid–based discretization techniques
-Data-driven post-processing methodologies
-Version control and collaboration using Git & GitHub
+---
 
-#📌 Important Notes
+## 📌 Important Notes
+- This repository is under **continuous development**
+- Output files may be **large in size** due to numerical simulations
+- Folder naming conventions reflect **simulation parameters** for clarity and reproducibility
 
-This repository is under active and continuous development
-Simulation output files may be large due to numerical resolution and time-stepping
-Folder naming conventions clearly reflect simulation parameters for traceability
+---
 
-#📜 License
+## 📜 License
+This project is intended strictly for **academic and research purposes**.
 
-This project is intended solely for academic and research purposes.
+---
 
-##✨ Author & Supervision
-
-#Author: Jeet Saha
-#Supervisor: Prof. (Dr.) Subhasree Dutta
+## ✨ Author & Supervision
+**Author:** Jeet Saha  
+**Supervisor:** Prof. (Dr.) Subhasree Dutta
