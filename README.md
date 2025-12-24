@@ -45,58 +45,68 @@ CFD_PROJECT/
 📊 Output Data
 Velocity fields
 ```
-Flow variables stored as .dat files
+📊 Simulation Outputs & Data Organization
 
-Time-step based numerical results
+Flow variables are stored in structured .dat files
 
-Structured for post-processing and visualization
+Results are generated in a time-step–based numerical framework
 
-🚀 Future Scope (Next Phases)
-The project will be extended beyond Force 2.0 with the following goals:
+Data layout is optimized for post-processing, visualization, and analysis
 
-Implementation of advanced numerical solvers
+Output structure supports reproducibility and parametric comparison across cases
 
-Improved stability and accuracy schemes
+🚀 Future Scope & Project Roadmap
 
-Turbulence modeling
+This project is designed as a continuously evolving CFD framework.
+Future development beyond Force 2.0 will focus on:
 
-Multi-physics coupling
+Integration of advanced numerical solvers
 
-Optimization for larger grids
+Development of higher-order stability and accuracy schemes
 
-Enhanced visualization and post-processing
+Implementation of turbulence models
 
-Validation against benchmark CFD problems
+Multi-physics coupling (heat transfer, buoyancy-driven flows, etc.)
 
-🎯 Objectives
-Understand fluid flow behavior numerically
+Performance optimization for large-scale computational grids
 
-Analyze the effect of physical parameters on flow
+Advanced flow visualization and post-processing pipelines
 
-Develop a scalable and extensible CFD framework
+Validation and benchmarking against standard CFD test cases
 
-Prepare the foundation for research and advanced simulations
+🎯 Project Objectives
+
+Numerically investigate and understand fluid flow behavior
+
+Analyze the influence of physical and numerical parameters on flow characteristics
+
+Design a scalable, modular, and extensible CFD framework
+
+Establish a strong foundation for advanced simulations and research-oriented work
 
 🛠 Tools & Technologies
-Numerical methods for CFD
 
-Structured grids
+Numerical methods applied to Computational Fluid Dynamics
 
-Data-driven post-processing
+Structured grid–based discretization techniques
 
-Version control using Git & GitHub
+Data-driven post-processing methodologies
 
-📌 Notes
-This repository is under continuous development.
+Version control and collaboration using Git & GitHub
 
-Output files may be large due to numerical simulations.
+📌 Important Notes
 
-Folder naming reflects simulation parameters for clarity.
+This repository is under active and continuous development
+
+Simulation output files may be large due to numerical resolution and time-stepping
+
+Folder naming conventions clearly reflect simulation parameters for traceability
 
 📜 License
-This project is intended for academic and research purposes.
 
-✨ Author
-Jeet Saha
-Supervisor --> Prof. (Dr.) <b>Subhasree Dutta</b>
+This project is intended solely for academic and research purposes.
 
+✨ Author & Supervision
+
+Author: Jeet Saha
+Supervisor: Prof. (Dr.) Subhasree Dutta
