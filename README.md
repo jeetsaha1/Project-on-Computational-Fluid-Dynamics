@@ -45,68 +45,51 @@ CFD_PROJECT/
 📊 Output Data
 Velocity fields
 ```
-📊 Simulation Outputs & Data Organization
+##📊 Simulation Outputs & Data Organization
 
 Flow variables are stored in structured .dat files
-
 Results are generated in a time-step–based numerical framework
-
 Data layout is optimized for post-processing, visualization, and analysis
-
 Output structure supports reproducibility and parametric comparison across cases
 
-🚀 Future Scope & Project Roadmap
+##🚀 Future Scope & Project Roadmap
 
 This project is designed as a continuously evolving CFD framework.
 Future development beyond Force 2.0 will focus on:
-
 Integration of advanced numerical solvers
-
 Development of higher-order stability and accuracy schemes
-
 Implementation of turbulence models
-
 Multi-physics coupling (heat transfer, buoyancy-driven flows, etc.)
-
 Performance optimization for large-scale computational grids
-
 Advanced flow visualization and post-processing pipelines
-
 Validation and benchmarking against standard CFD test cases
 
-🎯 Project Objectives
+##🎯 Project Objectives
 
 Numerically investigate and understand fluid flow behavior
-
 Analyze the influence of physical and numerical parameters on flow characteristics
-
 Design a scalable, modular, and extensible CFD framework
-
 Establish a strong foundation for advanced simulations and research-oriented work
 
-🛠 Tools & Technologies
+
+##🛠 Tools & Technologies
 
 Numerical methods applied to Computational Fluid Dynamics
-
 Structured grid–based discretization techniques
-
 Data-driven post-processing methodologies
-
 Version control and collaboration using Git & GitHub
 
-📌 Important Notes
+#📌 Important Notes
 
 This repository is under active and continuous development
-
 Simulation output files may be large due to numerical resolution and time-stepping
-
 Folder naming conventions clearly reflect simulation parameters for traceability
 
-📜 License
+#📜 License
 
 This project is intended solely for academic and research purposes.
 
-✨ Author & Supervision
+##✨ Author & Supervision
 
-Author: Jeet Saha
-Supervisor: Prof. (Dr.) Subhasree Dutta
+#Author: Jeet Saha
+#Supervisor: Prof. (Dr.) Subhasree Dutta
