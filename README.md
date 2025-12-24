@@ -34,14 +34,14 @@ The repository contains simulation cases, parameter studies, and result datasets
 ```text
 CFD_PROJECT/
 │
-├── Basic_time_0/           # Baseline simulation case <br>
-├── nx_ny_lx_ly_*/          # Grid and domain configurations <br>
-├── re_50_time_*            # Reynolds number = 50 cases <br>
-├── re_100_time_*           # Reynolds number = 100 cases <br>
-├── re_500_time_*           # Reynolds number = 500 cases <br>
-├── ri_*_time_*             # Richardson number / related parameter studies <br>
-├── .vscode/                # Editor configuration <br>
-└── README.md               # Project documentation <br>
+├── Basic_time_0/           # Baseline simulation case 
+├── nx_ny_lx_ly_*/          # Grid and domain configurations 
+├── re_50_time_*            # Reynolds number = 50 cases 
+├── re_100_time_*           # Reynolds number = 100 cases 
+├── re_500_time_*           # Reynolds number = 500 cases 
+├── ri_*_time_*             # Richardson number / related parameter studies 
+├── .vscode/                # Editor configuration 
+└── README.md               # Project documentation 
 📊 Output Data
 Velocity fields
 
@@ -98,3 +98,5 @@ This project is intended for academic and research purposes.
 
 ✨ Author
 Jeet Saha
+Supervisor --> Prof. (Dr.) <b>Subhasree Dutta</b>
+
