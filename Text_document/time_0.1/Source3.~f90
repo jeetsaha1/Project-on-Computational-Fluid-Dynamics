@@ -22,6 +22,7 @@ program channel_flow
     integer :: iprof(nprof)
     integer :: p
     integer :: iterp
+    real(kind=8) :: bigp_time
 
     !----------------------------
     ! Real (double precision) scalars
@@ -96,7 +97,7 @@ Pr = 6.2_8        ! Prandtl number
 Re = 100.0_8      ! Reynolds number
 
 dt        = 5.0d-4    ! time step
-FinalTime = 1.0_8      ! final simulation time
+FinalTime = 0.1_8      ! final simulation time
 omega     = 0.7_8      ! relaxation factor
 Error     = 1.0E-5_8   ! convergence tolerance
 
@@ -708,7 +709,7 @@ do iterp = 1, 300
    end do
 
    if (bigp < Error) exit
-
+   bigp_time = bigp
 end do
 
 !----------------------------------------------------------------------!
@@ -767,6 +768,14 @@ bigu = 0.0d0 ; bigv = 0.0d0 ; bigT = 0.0d0 ; bigdiv = 0.0d0
       end do
    end do
 
+    if (mod(itrn, 100) == 0) then
+       write(*,'(A,F10.6,3X,A,ES10.3,3X,A,ES10.3,3X,A,ES10.3)') &
+        'Time=', time, &
+        'bigu=', bigu, &
+        'bigv=', bigv, &
+        'bigT=', bigT
+        call flush(6)
+    end if
 
 
     if (mod(itrn,100)==0) then
@@ -774,9 +783,23 @@ bigu = 0.0d0 ; bigv = 0.0d0 ; bigT = 0.0d0 ; bigdiv = 0.0d0
        end if
 
 
+      if (mod(itrn,50) == 0) then
+         write(*,'( &
+         "Iter=",I6, &
+         " Time=",F10.5, &
+          " bigu=",ES10.3, &
+          " bigv=",ES10.3, &
+          " bigT=",ES10.3, &
+          " bigp=",ES10.3, &
+          " bigdiv=",ES10.3 )') &
+          itrn, time, bigu, bigv, bigT, bigp_time, bigdiv
+        end if
+
+
+
    time = time + dt
 
-   if (mod(itrn,100) == 0) then
+   if (mod(itrn,1) == 0) then
       write(*,'("Iter=",I6," Time=",F10.5," div=",ES10.3)') itrn,time,bigdiv
    end if
 
