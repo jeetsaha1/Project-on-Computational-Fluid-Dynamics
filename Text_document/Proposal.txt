@@ -1,0 +1,17 @@
+Title : Numerical Investigation of Mixed Convection Flow and Heat Transfer in a Backward-Facing Step Channel
+
+Abstract
+
+Mixed convection flow in channels with geometric discontinuities such as backward-facing steps is of significant 
+interest due to its wide applications in heat exchangers, cooling systems, and industrial flows. In this work, 
+a numerical investigation of laminar mixed convection flow and heat transfer in a backward-facing step channel 
+is performed. The governing continuity, momentum, and energy equations are solved using a finite volume–based 
+pressure correction approach implemented in a Fortran code. A structured Cartesian grid is employed to discretize
+the computational domain, and appropriate boundary conditions are applied at the inlet, outlet, and solid walls.
+The effect of buoyancy is incorporated through the Richardson number, while thermal diffusion is governed by the 
+Prandtl number. Velocity, pressure, and temperature fields are obtained after achieving convergence based on 
+prescribed residual criteria. The numerical results are post-processed and visualized using Techplot to analyze 
+flow separation, reattachment, and thermal behavior downstream of the step. The study captures key flow features 
+such as recirculation zones and temperature stratification induced by mixed convection. The developed solver 
+demonstrates stable convergence and physically consistent results. This work provides a reliable numerical framework
+for studying mixed convection flows in complex channel geometries.
