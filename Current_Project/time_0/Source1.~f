@@ -25,6 +25,9 @@
 
       real(kind=8) :: x_step, h_step
       logical, dimension(:,:), allocatable :: solid
+      real(kind=8), parameter :: BLANK = -1.0d30
+      logical, dimension(:,:), allocatable :: fluid
+      integer :: jwall
 
 
 
@@ -41,9 +44,9 @@
       Ri=1.0  !Richardson number
       LY=1.0
       Pr=6.2   !Prandtl number
-      dt=0.001 ! time step
+      dt=1.0d-4 ! time step
       FinalTime=0.0 ! Final Time
-      omega=0.05
+      omega=0.6
       Error=1.0E-04
       ddt=1.0/dt
       Re=100.0! Reynolds Number
@@ -105,8 +108,10 @@
       allocate(d1(nx))
 
       allocate(ff(n,n))
-      
+      allocate(fluid(nx,ny))
+
       allocate(solid(nx,ny))
+
 
 !**********************************************************************!
 !**********************************************************************!
@@ -199,16 +204,6 @@
 !*****************************Geometry*********************************!
 
 
-      open(24,file='geometry.dat')
-      write(24,*)'variables = "x", "y"'
-      write(24,*)'zone i=',ny,', j=',nx
-      do i=1,nx
-        do j=1,ny
-          write(24,*)x(i),y(j)
-        end do
-      end do
-      close(24)
-
 
 
 
@@ -242,14 +237,42 @@
       x_step = 2.5
       h_step = 0.5*LY
 
-      do i=1,nx
-        do j=1,ny
-          solid(i,j) = .false.
-          if (x(i).lt.x_step .and. y(j).gt.(LY - h_step)) then
-            solid(i,j) = .true.
-          end if
-        end do
-      end do
+      do 210 i = 1, nx
+         do 220 j = 1, ny
+            solid(i,j) = .false.
+
+            if ( x(i).lt.x_step .and. y(j).gt.(LY-h_step) ) then
+               solid(i,j) = .true.
+            endif
+
+220      continue
+210   continue
+
+
+
+      do 410 i = 1, nx
+         do 420 j = 1, ny
+            fluid(i,j) = .not. solid(i,j)
+420      continue
+410   continue
+
+
+
+
+      open(24,file='geometry.dat')
+      write(24,*) 'variables = "x", "y"'
+      write(24,*) 'zone f=point'
+
+      do 310 j = 1, ny
+         do 320 i = 1, nx
+            if (.not. solid(i,j)) then
+               write(24,*) x(i), y(j)
+            endif
+320      continue
+310   continue
+
+      close(24)
+
 
 
 
@@ -302,23 +325,27 @@ C        vp(i,1)=vp(i,2)
 
 
 !.......................... Upper wall ................................!
-       do i=1,nx
-        u(i,ny)=0.0- u(i,ny-1)
-        u1(i,ny)=0.0- u1(i,ny-1)
+      do  i = 1, nx
 
-        v(i,ny)=0.0
-        v1(i,ny)=0.0
-        v(i,ny-1)=0.0
-        v1(i,ny-1)=0.0
+         if (x(i) .lt. x_step) then
+            jwall = int((LY-h_step)/dyy) + 1
+         else
+            jwall = ny
+         endif
 
-        T(i,ny)=1.0
-        T1(i,ny)=1.0
+         u(i,jwall)  = -u(i,jwall-1)
+         u1(i,jwall) = -u1(i,jwall-1)
 
-        cpp(i,ny)=cpp(i,ny-1)
-        cpp1(i,ny)=cpp1(i,ny-1)
+         v(i,jwall)  = 0.0
+         v1(i,jwall) = 0.0
 
-C        vp(i,ny)=vp(i,ny-1)
-      end do
+         T(i,jwall)  = 1.0
+         T1(i,jwall) = 1.0
+
+         cpp(i,jwall)  = cpp(i,jwall-1)
+         cpp1(i,jwall) = cpp1(i,jwall-1)
+
+         end do
 
 
 !.............................. Inlet .................................!
@@ -363,18 +390,18 @@ C        vp(nx,j)=vp(nx-1,j)
 !----------------------------------------------------------------------!
 !---------- SOLID ENFORCEMENT (SAFE POSITION) --------------------------
 
-      do i=1,nx
-        do j=1,ny
-          if (solid(i,j)) then
-            u(i,j)  = 0.0
-            u1(i,j) = 0.0
-            v(i,j)  = 0.0
-            v1(i,j) = 0.0
-            T(i,j)  = 1.0
-            T1(i,j) = 1.0
-          end if
-        end do
-      end do
+      !do i=1,nx
+      !  do j=1,ny
+      !    if (solid(i,j)) then
+      !      u(i,j)  = 0.0
+      !      u1(i,j) = 0.0
+      !      v(i,j)  = 0.0
+      !      v1(i,j) = 0.0
+      !      T(i,j)  = 1.0
+      !      T1(i,j) = 1.0
+      !    end if
+      !  end do
+      !end do
 
 !----------------------------------------------------------------------
 
@@ -692,23 +719,27 @@ C        vp(i,1)=vp(i,2)
 
 
 !.......................... Upper wall ................................!
-       do i=1,nx
-        u(i,ny)=0.0- u(i,ny-1)
-        u1(i,ny)=0.0- u1(i,ny-1)
+      do 510 i = 1, nx
 
-        v(i,ny)=0.0
-        v1(i,ny)=0.0
-        v(i,ny-1)=0.0
-        v1(i,ny-1)=0.0
+         if (x(i) .lt. x_step) then
+            jwall = int((LY-h_step)/dyy) + 1
+         else
+            jwall = ny
+         endif
 
-        T(i,ny)=1.0
-        T1(i,ny)=1.0
+         u(i,jwall)  = -u(i,jwall-1)
+         u1(i,jwall) = -u1(i,jwall-1)
 
-        cpp(i,ny)=cpp(i,ny-1)
-        cpp1(i,ny)=cpp1(i,ny-1)
+         v(i,jwall)  = 0.0
+         v1(i,jwall) = 0.0
 
-C        vp(i,ny)=vp(i,ny-1)
-      end do
+         T(i,jwall)  = 1.0
+         T1(i,jwall) = 1.0
+
+         cpp(i,jwall)  = cpp(i,jwall-1)
+         cpp1(i,jwall) = cpp1(i,jwall-1)
+
+510   continue
 
 !.............................. Inlet .................................!
       do j=1,ny
@@ -760,20 +791,51 @@ C        vp(nx,j)=vp(nx-1,j)
 
 !**********************************************************************!
 !**********************************************************************!
-      do 146 j=2,ny-1
-        do 146 i=2,nx-1
+      do 146 j = 2, ny-1
+         do 147 i = 2, nx-1
 
-          div=(u1(i,j)-u1(i-1,j))*dy(j)+(v1(i,j)-v1(i,j-1))*dx(i)
+                        if (solid(i,j)) then
+               cpp1(i,j) = 0.0d0
+               goto 147
+            endif
 
-          pcof=(2.0/3.0)*(dt*dy(j))*(1.0/dxr(i)+1.0/dxl(i))+
-     *    (2.0/3.0)*(dt*dx(i))*(1.0/dyt(j)+1.0/dyb(j))
+            div = (u1(i,j)-u1(i-1,j))*dy(j)
+     $          + (v1(i,j)-v1(i,j-1))*dx(i)
 
-          rhs=(2./3.)*(dt*dy(j))*(cpp(i+1,j)/dxr(i)+cpp1(i-1,j)/dxl(i))
-     *    +(2./3.)*(dt*dx(i))*(cpp(i,j+1)/dyt(j)+cpp1(i,j-1)/dyb(j))
+            rhs  = 0.0d0
+            pcof = 0.0d0
 
-          cpp1(i,j)=(-div+rhs)/pcof
-          cpp1(i,j)=omega*cpp1(i,j)
+            if (.not. solid(i+1,j)) then
+               rhs  = rhs  + cpp(i+1,j)/dxr(i)
+               pcof = pcof + dy(j)/dxr(i)
+            endif
 
+            if (.not. solid(i-1,j)) then
+               rhs  = rhs  + cpp1(i-1,j)/dxl(i)
+               pcof = pcof + dy(j)/dxl(i)
+            endif
+
+            if (.not. solid(i,j+1)) then
+               rhs  = rhs  + cpp(i,j+1)/dyt(j)
+               pcof = pcof + dx(i)/dyt(j)
+            endif
+
+            if (.not. solid(i,j-1)) then
+               rhs  = rhs  + cpp1(i,j-1)/dyb(j)
+               pcof = pcof + dx(i)/dyb(j)
+            endif
+
+            rhs  = (2.0d0/3.0d0)*dt*rhs
+            pcof = (2.0d0/3.0d0)*dt*pcof
+
+            if (pcof .lt. 1.0d-12) then
+               cpp1(i,j) = 0.0d0
+            else
+               cpp1(i,j) = (-div + rhs)/pcof
+            endif
+
+
+147      continue
 146   continue
 
 !**********************************************************************!
@@ -795,6 +857,21 @@ C        vp(nx,j)=vp(nx-1,j)
         write(*,*)'bigp=',bigp
         go to 5
       end if
+      
+      cpp(1,1)  = 0.0d0
+      cpp1(1,1) = 0.0d0
+
+!--------------------------------------------------
+! Remove pressure correction inside solid cells
+!--------------------------------------------------
+      do i = 1, nx
+        do j = 1, ny
+          if (solid(i,j)) then
+             cpp(i,j)  = 0.0
+             cpp1(i,j) = 0.0
+          endif
+        end do
+      end do
 
 
 !**********************************************************************!
@@ -802,13 +879,13 @@ C        vp(nx,j)=vp(nx-1,j)
 !**********************************************************************!
       do j=2,ny-1
         do i=2,nx-1
-
+          if (solid(i,j)) goto 888
           vp(i,j)=vp(i,j)+cpp(i,j)
 
           u1(i,j)=u1(i,j)-((2.0*dt)/(3.0*dxr(i)))*(cpp(i+1,j)-cpp(i,j))
 
           v1(i,j)=v1(i,j)-((2.0*dt)/(3.0*dyt(j)))*(cpp(i,j+1)-cpp(i,j))
-
+888       continue
         end do
       end do
 !**********************************************************************!
@@ -849,6 +926,11 @@ C        vp(nx,j)=vp(nx-1,j)
         write(*,*)'bigu=',bigu,'bigv=',bigv,'bigT=',bigT
         go to 555
       end if
+      
+            if (mod(itrn,50) .eq. 0) then
+         write(*,1000) itrn, bigp, bigu, bigv
+      endif
+
 !**********************************************************************!
 
 !**********************************************************************!
@@ -898,23 +980,25 @@ C        vp(nx,j)=vp(nx-1,j)
       write(100,*)'zone i=',ny,', j=',nx,', f=point'
 
 
-      do i=1,nx
-        do j=1,ny
-          write(70,*)x(i),y(j),u(i,j)
-          write(80,*)x(i),y(j),v(i,j)
-          write(90,*)x(i),y(j),vp(i,j)
-          write(100,*)x(i),y(j),T(i,j)
+      do j = 1, ny
+         do i = 1, nx
+            if (solid(i,j)) then
+               write(70,*) x(i), y(j), BLANK
+               write(80,*) x(i), y(j), BLANK
+               write(90,*) x(i), y(j), BLANK
+               write(100,*) x(i), y(j), BLANK
+            else
+                write(70,*) x(i), y(j), u(i,j)
+                write(80,*) x(i), y(j), v(i,j)
+                write(90,*) x(i), y(j), vp(i,j)
+                write(100,*) x(i), y(j), T(i,j)
+            end if
         end do
-        write(70,*)' '
-        write(80,*)' '
-        write(90,*)' '
-        write(100,*)' '
-      end do
-
-      close(70)
-      close(80)
-      close(90)
-      close(100)
+        write(70,*)
+        write(80,*)
+        write(90,*)
+        write(100,*)
+        end do
 
 
 
@@ -1057,6 +1141,8 @@ C        vp(nx,j)=vp(nx-1,j)
       write(131,*) 'averagevelocity=',ua
       close(131)
 
+      1000  format('Iter=',I6,'  bigp=',1PE12.4,
+     $       '  bigu=',1PE12.4,'  bigv=',1PE12.4)
 
       end program channel_flow
 
