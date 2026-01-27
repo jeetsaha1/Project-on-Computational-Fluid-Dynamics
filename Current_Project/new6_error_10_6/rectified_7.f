@@ -1,4 +1,5 @@
 
+
 !
 !
 !                         **********************************************
@@ -33,8 +34,18 @@
       real(kind=8) :: Knff, chi, phi
       real(kind=8) :: U0, Lref, Sgen_avg_nd
       real(kind=8) :: Br
+      logical, dimension(nx,ny) :: solid
 
 
+      ! -------- Base fluid properties (non-dimensional ratios) ----------
+      real(kind=8) :: rho_f, cp_f, k_f
+
+      ! -------- Nanoparticle properties ----------
+      real(kind=8) :: rho_p, cp_p, k_p
+
+      ! -------- Effective nanofluid properties ----------
+      real(kind=8) :: rho_nf, rhocp_nf, rhocp_f
+      real(kind=8) :: Cp_ratio
 
 !**********************************************************************!
 !******************* INITIALIZATION OF SOME VARIABLES *****************!
@@ -45,7 +56,7 @@
       LX=5.0
 
 
-      Ri=1.0  !Richardson number
+      Ri=0.0  !Richardson number
       LY=1.0
       Pr=6.2   !Prandtl number
       dt=0.001 ! time step
@@ -53,7 +64,7 @@
       omega=0.7
       Error=1.0E-06
       ddt=1.0/dt
-      Re=100.0! Reynolds Number
+      Re=30.0! Reynolds Number
       Rd=1.0/(Re*Pr)
       !T=300 ! Absolute Temperature
       !h=5E-8 ! Channel height
@@ -65,9 +76,47 @@
       chi  = 1.0E-04      ! viscous dissipation coefficient (set as per model)
       Knff = 1.0      ! effective thermal conductivity ratio
 
-      U0   = 2.0     ! inlet velocity (matches u(1,j)=2.0-u(2,j))
+      U0   = 0.001     ! inlet velocity (matches u(1,j)=2.0-u(2,j))
       Lref = LY      ! channel height
+
+
+
+
+      ! ---- Effective properties (simple models) ----
+      Re = Re / (1.0 + 2.5*phi)          ! viscosity increase
+      Pr = Pr * (1.0 + 2.5*phi)          ! thermal diffusivity change
       Br = 1.0/Re
+
+      !Br = Br * (1.0 + 2.5*phi)          ! viscous entropy increases
+
+
+      ! -------- Base fluid (water) ----------
+      rho_f = 1.0
+      cp_f  = 1.0
+      k_f   = 1.0
+
+      ! -------- Nanoparticle (Al2O3) ----------
+      rho_p = 3970.0 / 1000.0    ! normalized
+      cp_p  = 765.0  / 4180.0
+      k_p   = 40.0   / 0.613
+
+
+      ! -------- Effective density ----------
+      rho_nf = (1.0-phi)*rho_f + phi*rho_p
+
+! -------- Effective heat capacity ----------
+      rhocp_f  = rho_f * cp_f
+      rhocp_nf = (1.0-phi)*rhocp_f + phi * rho_p * cp_p
+
+      Cp_ratio = rhocp_nf / rhocp_f
+
+      ! -------- Maxwell thermal conductivity model ----------
+      Knff = ( k_p + 2.0*k_f - 2.0*phi*(k_f - k_p) ) /
+     &       ( k_p + 2.0*k_f + phi*(k_f - k_p) )
+
+
+
+      Rd = Knff / (Re*Pr*Cp_ratio)
 
 !**********************************************************************!
 !**********************************************************************!
@@ -261,6 +310,14 @@ C================= ZONE 2: AFTER STEP ==================
 
 
 
+      do i = 1, nx
+      do j = 1, ny
+      solid(i,j) = .false.
+      if (x(i) > x_step .and. y(j) > (LY - h_step)) then
+      solid(i,j) = .true.
+      end if
+      end do
+      end do
 
 
 
@@ -367,8 +424,14 @@ C        vp(i,1)=vp(i,2)
 
 !.............................. Inlet .................................!
       do j=1,ny
-        u(1,j)=2.0-u(2,j)
-        u1(1,j)=2.0-u1(2,j)
+        if (y(j) .le. (LY-h_step)) then
+        u(1,j)  = U0 *(LY/(LY-h_step)) - u(2,j)
+        u1(1,j) = U0 *(LY/(LY-h_step)) - u1(2,j)
+        else
+        u(1,j)  = 0.0
+        u1(1,j) = 0.0
+        end if
+
 
         v(1,j)=0.0
         v1(1,j)=0.0
@@ -758,8 +821,14 @@ C        vp(i,1)=vp(i,2)
 
 !.............................. Inlet .................................!
       do j=1,ny
-        u(1,j)=2.0-u(2,j)
-        u1(1,j)=2.0-u1(2,j)
+        if (y(j) .le. (LY-h_step)) then
+        u(1,j)  = U0 *(LY/(LY-h_step)) - u(2,j)
+        u1(1,j) = U0 *(LY/(LY-h_step)) - u1(2,j)
+        else
+        u(1,j)  = 0.0
+        u1(1,j) = 0.0
+        end if
+
 
         v(1,j)=0.0
         v1(1,j)=0.0
@@ -879,7 +948,10 @@ C        vp(nx,j)=vp(nx-1,j)
           vp(i,j) = vp(i,j) + cpp(i,j)
 
           u1(i,j) = u1(i,j)
-     $      - (2.0*dt/(3.0*dxr(i))) * (cpp(i+1,j)-cpp(i,j))
+     $     - (2.0*dt/(3.0*dxr(i))) * (cpp(i+1,j)-cpp(i,j))
+
+
+
 
           v1(i,j) = v1(i,j)
      $      - (2.0*dt/(3.0*dyt(j))) * (cpp(i,j+1)-cpp(i,j))
@@ -1011,7 +1083,7 @@ C-------------------- INITIALIZATION ----------------------------------!
 
 
 
-C==================== ENTROPY ===================!
+C==================== ENTROPY (NANOFLUID) ===================!
 
       do i = 2, nx-1
 
@@ -1023,24 +1095,22 @@ C==================== ENTROPY ===================!
 
         do j = 2, jmax
 
-! -------- Thermal entropy (NON-DIMENSIONAL) ----------
-           Sh(i,j) = (1.0/(Re*Pr)) * (
-     & ((T(i+1,j)-T(i,j))/dxr(i))**2
-     &+((T(i,j)-T(i-1,j))/dxl(i))**2
-     &+((T(i,j+1)-T(i,j))/dyt(j))**2
-     &+((T(i,j)-T(i,j-1))/dyb(j))**2 )
+! -------- Thermal entropy (nanofluid, NON-DIMENSIONAL) ----------
+          Sh(i,j) = (Knff/(Re*Pr*Cp_ratio)) * (
+     &      ((T(i+1,j)-T(i,j))/dxr(i))**2
+     &    + ((T(i,j)-T(i-1,j))/dxl(i))**2
+     &    + ((T(i,j+1)-T(i,j))/dyt(j))**2
+     &    + ((T(i,j)-T(i,j-1))/dyb(j))**2 )
 
-! -------- Friction entropy (NON-DIMENSIONAL) ----------
-           Sf(i,j) = Br * (
-     & 2.0*((u(i,j+1)-u(i,j))/dyt(j))**2
-     &+2.0*((v(i+1,j)-v(i,j))/dxr(i))**2
-     &+(((u(i+1,j)-u(i,j))/dx(i+1))
-     & +((v(i,j+1)-v(i,j))/dy(j+1)))**2 )
+! -------- Friction entropy (nanofluid, NON-DIMENSIONAL) ----------
+          Sf(i,j) = chi * Br / ((1.0-phi)**2.5) * (
+     &      2.0*((u(i,j+1)-u(i,j))/dyt(j))**2
+     &    + 2.0*((v(i+1,j)-v(i,j))/dxr(i))**2
+     &    + (((u(i+1,j)-u(i,j))/dx(i+1))
+     &     + ((v(i,j+1)-v(i,j))/dy(j+1)))**2 )
 
-! -------- Total entropy generation -------------------
-           Sgen(i,j) = Sh(i,j) + Sf(i,j)
-
-
+! -------- Total entropy generation -----------------------------
+          Sgen(i,j) = Sh(i,j) + Sf(i,j)
 
         end do
       end do

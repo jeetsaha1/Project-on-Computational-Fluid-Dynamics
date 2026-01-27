@@ -1,17 +1,58 @@
-Title : Numerical Investigation of Mixed Convection Flow and Heat Transfer in a Backward-Facing Step Channel
+Title :  An Overview of Mixed Convection Flow in a Backward-Facing Step Channel: A Numerical Approach
 
 Abstract
 
-Mixed convection flow in channels with geometric discontinuities such as backward-facing steps is of significant 
-interest due to its wide applications in heat exchangers, cooling systems, and industrial flows. In this work, 
-a numerical investigation of laminar mixed convection flow and heat transfer in a backward-facing step channel 
-is performed. The governing continuity, momentum, and energy equations are solved using a finite volume–based 
-pressure correction approach implemented in a Fortran code. A structured Cartesian grid is employed to discretize
-the computational domain, and appropriate boundary conditions are applied at the inlet, outlet, and solid walls.
-The effect of buoyancy is incorporated through the Richardson number, while thermal diffusion is governed by the 
-Prandtl number. Velocity, pressure, and temperature fields are obtained after achieving convergence based on 
-prescribed residual criteria. The numerical results are post-processed and visualized using Techplot to analyze 
-flow separation, reattachment, and thermal behavior downstream of the step. The study captures key flow features 
-such as recirculation zones and temperature stratification induced by mixed convection. The developed solver 
-demonstrates stable convergence and physically consistent results. This work provides a reliable numerical framework
-for studying mixed convection flows in complex channel geometries.
+
+This project involves a numerical study of steady laminar mixed convection flow and heat transfer in 
+a backward-facing step channel using Computational Fluid Dynamics (CFD). The governing continuity, momentum,
+ and energy equations are solved using the finite volume method with a pressure correction algorithm developed 
+ in Fortran. A structured Cartesian grid is used to model the stepped channel geometry, and appropriate boundary 
+ conditions are applied at the inlet, outlet, and channel walls.
+
+
+The effect of buoyancy is included through the Richardson number to account for mixed convection, while thermal
+ diffusion is represented by the Prandtl number. Velocity, pressure, and temperature distributions are obtained
+  after achieving convergence based on residual criteria. Entropy generation due to heat transfer and fluid friction 
+  is also evaluated to understand thermodynamic losses in the flow. The results are visualized using Techplot to 
+  analyze flow separation, recirculation zones, temperature distribution, and entropy behavior downstream of the 
+  step. This project helps in understanding mixed convection characteristics in channels with geometric discontinuities
+   and demonstrates the practical application of CFD techniques.
+
+
+Object
+
+OBJECTIVE OF THE PROPOSAL
+
+Mixed convection flow in channels with geometric discontinuities such as backward-facing steps exhibits complex 
+interactions between forced flow, buoyancy effects, heat transfer, and flow separation. Understanding these interactions
+is important for the design and optimization of thermal systems such as heat exchangers, cooling passages, and industrial 
+flow channels. The present project aims to develop a reliable numerical framework to study these phenomena in detail using
+Computational Fluid Dynamics (CFD).
+
+
+
+Based on the background and scope of the present work, the objectives of this project are outlined as follows:
+
+To perform a detailed numerical investigation of steady, laminar mixed convection flow and heat transfer in a backward-facing 
+step channel, capturing the coupled effects of fluid flow and thermal transport using a CFD-based approach.
+
+To solve the governing continuity, momentum, and energy equations using the finite volume method combined with a pressure 
+correction algorithm, implemented in a fixed-form Fortran code, and to ensure numerical stability and accuracy of the solution.
+
+To examine the influence of buoyancy forces on the flow and thermal fields by incorporating the Richardson number, and to study
+ its effect on velocity distribution, pressure field, temperature contours, and overall flow structure.
+
+To analyze the flow separation, recirculation zones, and reattachment length downstream of the backward-facing step, and to 
+understand how geometric discontinuity alters the hydrodynamic behavior of mixed convection flows.
+
+To investigate heat transfer characteristics within the stepped channel, including temperature distribution and thermal 
+stratification, for different mixed convection conditions governed by the Prandtl number.
+
+To evaluate entropy generation due to heat transfer and fluid friction, with the objective of quantifying thermodynamic 
+irreversibility and identifying regions of high energy loss within the flow domain.
+
+To visualize and interpret the numerical results using Techplot, enabling clear representation of flow patterns, thermal 
+behavior, recirculation regions, and entropy generation mechanisms.
+
+To establish the developed numerical solver as a reliable computational tool for studying mixed convection and thermodynamic 
+performance in channels with geometric discontinuities.
